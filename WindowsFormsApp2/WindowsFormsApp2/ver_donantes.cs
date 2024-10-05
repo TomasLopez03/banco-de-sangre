@@ -13,6 +13,7 @@ namespace WindowsFormsApp2
 {
     public partial class ver_donantes : Form
     {
+        //variable con las caracteristicas de la base de datos 
         private string connectionString = "Server=localhost;Database=banco;User=root;Password=Luci2357;";     
             
             
@@ -45,28 +46,31 @@ namespace WindowsFormsApp2
         {
 
         }
-
+        //funcion para mostrar los donantes
         private void cargar_dondante(string filtro = "")
         {
+            //se instancia la clase MySqlConnection
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 try
                 {
+                    //el metodo Open() abre la conexion a la base de datos
                     connection.Open();
-
+                    //se define la consulta la cual traera los datos deseados
                     string query = "select nombre,apellido,dni,celular,sexo,celular,calle,numero,tipo from donante a inner join sangre b on a.idsangre = b.id ";
-                    MySqlDataAdapter adapter = new MySqlDataAdapter(query, connection);
-                    DataTable table = new DataTable();
-                    adapter.Fill(table);
-                    this.dataGridView1.DataSource = table;
-
+                    
                     if (filtro != "")
                     {
+                        //se modifica la consulta constantemente segun lo que ingresa el usuario
                         query += "where" + " dni like '" +filtro+"%'";
                     }
-                    adapter = new MySqlDataAdapter(query, connection);
-                    table = new DataTable();
+                    //se intancia la clase MySqlDataAdapter para ejecutar la consulta
+                    MySqlDataAdapter adapter = new MySqlDataAdapter(query, connection);
+                    //se crea un objeto tabla
+                    DataTable table = new DataTable();
+                    //se cargan los registros obtenidos de la base de datos en el objeto tabla
                     adapter.Fill(table);
+                    //se muestran los datos en el datagridview
                     this.dataGridView1.DataSource = table;
                 }
                 catch (Exception ex)
